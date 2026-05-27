@@ -6,6 +6,7 @@ import process from 'node:process';
 import { Command } from 'commander';
 
 import { registerAskCommand } from './src/commands/ask.js';
+import { registerAppCommand } from './src/commands/app.js';
 import { registerConfigCommand } from './src/commands/config.js';
 import { registerExplainCommand } from './src/commands/explain.js';
 import { registerGoCommand } from './src/commands/go.js';
@@ -13,6 +14,7 @@ import { registerInitCommand } from './src/commands/init.js';
 import { registerOpenCommand } from './src/commands/open.js';
 import { registerStartCommand } from './src/commands/start.js';
 import { registerSummarizeCommand } from './src/commands/summarize.js';
+import { registerTimeCommand } from './src/commands/time.js';
 import { CONFIG_PATH, pathExists } from './src/commands/shared.js';
 
 const program = new Command();
@@ -20,7 +22,7 @@ const program = new Command();
 program
   .name('perky')
   .description('AI-powered developer assistant and workspace launcher')
-  .version('0.0.1')
+  .version('0.0.2')
   .showHelpAfterError()
   .showSuggestionAfterError()
   .addHelpText('after', `
@@ -30,14 +32,18 @@ Examples:
   $ perky ask "How do I read a file async in Node.js?"
   $ perky explain package.json
   $ perky summarize app.log --tail 200
+  $ perky time
   $ perky open myapp
+  $ perky chrome
   $ perky start myapp
   $ perky go github.com
 `);
 
 registerAskCommand(program);
+registerAppCommand(program);
 registerExplainCommand(program);
 registerSummarizeCommand(program);
+registerTimeCommand(program);
 registerOpenCommand(program);
 registerStartCommand(program);
 registerGoCommand(program);
@@ -52,5 +58,14 @@ if (process.argv.length <= 2) {
 
   program.outputHelp();
 } else {
-  await program.parseAsync(process.argv);
+  const rawArgs = process.argv.slice(2);
+  const firstArg = rawArgs[0];
+  const knownCommands = new Set(program.commands.map((command) => command.name()));
+  const shouldImplicitApp = firstArg && !firstArg.startsWith('-') && !knownCommands.has(firstArg);
+
+  const argv = shouldImplicitApp
+    ? [process.argv[0], process.argv[1], 'app', ...rawArgs]
+    : process.argv;
+
+  await program.parseAsync(argv);
 }

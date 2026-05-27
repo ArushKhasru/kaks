@@ -1,6 +1,6 @@
 {
   "name": "perky",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Hello_cli_perky_here",
   "keywords": [],
   "homepage": "https://github.com/ArushKhasru/perky#readme",
@@ -19,7 +19,7 @@
     "perky": "cli.js"
   },
   "scripts": {
-    "test": "node --test"
+    "test": "node --test test/**/*.test.js tests/**/*.test.js"
   },
   "dependencies": {
     "axios": "^1.16.1",

@@ -1,0 +1,14 @@
+{
+  "ai": {
+    "provider": "gemini",
+    "model": "gemini-2.0-flash",
+    "temperature": 0.7,
+    "maxTokens": 2048
+  },
+  "projects": {},
+  "defaults": {
+    "editor": "code",
+    "browser": "default",
+    "shell": "powershell"
+  }
+}

@@ -27,6 +27,7 @@ const SUMMARIZE_SYSTEM_PROMPT = [
   'Be structured and concise.',
 ].join(' ');
 
+
 // ---------------------------------------------------------------------------
 // Prompt builders
 // ---------------------------------------------------------------------------
@@ -110,3 +111,13 @@ export function buildSummarizePrompt(content, metadata = {}) {
     userPrompt,
   };
 }
+
+/**
+ * Build the prompt pair for WhatsApp AI replies.
+ *
+ * @param {string} message - Incoming message text
+ * @param {object} [options]
+ * @param {string} [options.contact] - Optional contact display info
+ * @param {string} [options.context] - Optional conversation context
+ * @returns {{ systemPrompt: string, userPrompt: string }}
+ */

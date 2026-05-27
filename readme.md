@@ -9,7 +9,9 @@ AI-powered developer assistant and workspace launcher for Windows-first workflow
 - `perky ask` AI Q&A with optional clipboard copy
 - `perky explain` AI file explanations with detail/section controls
 - `perky summarize` log summarization with local JSON summary and optional AI insight
+- `perky time` show the current local time (use `--live` to update continuously)
 - `perky open` open project editor, browser URLs, terminal, and file explorer
+- `perky app <name>` open an installed application (shorthand: `perky <app>`)
 - `perky start` run configured services concurrently (attached or detached)
 - `perky go` normalize/open/copy/print URLs quickly
 - `perky config` set/get/list/add-project/remove-project/edit global config
@@ -38,10 +40,15 @@ perky init
 perky ask "How do I read a file async in Node.js?"
 perky explain package.json
 perky summarize app.log --tail 200
+perky time
+perky time --live
 perky open myapp
+perky chrome
 perky start myapp
 perky go github.com
 ```
+
+Use `perky open <project>` to open a configured project; the shorthand `perky <app>` is reserved for installed apps.
 
 ## Configuration
 Global config is stored at `~/.perky/config.json`. Project-local config is `.perky.json`.
