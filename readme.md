@@ -1,4 +1,4 @@
-# perky CLI
+# perky_CLI
 
 AI-powered developer assistant and workspace launcher for Windows-first workflows.
 
