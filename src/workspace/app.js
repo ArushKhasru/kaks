@@ -6,6 +6,7 @@ import { execa } from 'execa';
 
 import { CliError, resolveUserPath } from '../commands/shared.js';
 import { launchDetached } from './process.js';
+import { getProcessNamesForLauncher, recordBackgroundApp } from './system.js';
 
 const WINDOWS_APP_PATHS = [
   'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths',
@@ -67,7 +68,17 @@ export async function openApp(nameParts) {
     throw new CliError(`App not found: ${appName}. Use "perky open <project>" to open a configured project.`);
   }
 
-  await launchDetached(launcher.command, launcher.args ?? [], launcher.options);
+  const launchResult = await launchDetached(launcher.command, launcher.args ?? [], launcher.options);
+  const processNames = getProcessNamesForLauncher(launcher);
+  await recordBackgroundApp({
+    kind: 'app',
+    name: launcher.label ?? appName,
+    pid: process.platform === 'win32' && processNames.length ? undefined : launchResult?.pid,
+    command: launcher.command,
+    args: launcher.args,
+    processNames,
+  }).catch(() => undefined);
+
   console.log(`Opening app: ${launcher.label ?? appName}`);
 }
 

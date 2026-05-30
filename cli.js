@@ -14,6 +14,7 @@ import { registerInitCommand } from './src/commands/init.js';
 import { registerOpenCommand } from './src/commands/open.js';
 import { registerStartCommand } from './src/commands/start.js';
 import { registerSummarizeCommand } from './src/commands/summarize.js';
+import { registerSystemCommands, runRootUpdateOption } from './src/commands/system.js';
 import { registerTimeCommand } from './src/commands/time.js';
 import { CONFIG_PATH, pathExists } from './src/commands/shared.js';
 
@@ -22,7 +23,7 @@ const program = new Command();
 program
   .name('perky')
   .description('I am just a Workspace-launcher with  AI-Assistant')
-  .version('0.0.3')
+  .version('0.0.5')
   .showHelpAfterError()
   .showSuggestionAfterError()
   .addHelpText('after', `
@@ -37,6 +38,7 @@ Examples:
   $ perky chrome
   $ perky start myapp
   $ perky go github.com
+  $ perky restart
 `);
 
 registerAskCommand(program);
@@ -47,6 +49,7 @@ registerTimeCommand(program);
 registerOpenCommand(program);
 registerStartCommand(program);
 registerGoCommand(program);
+registerSystemCommands(program);
 registerConfigCommand(program);
 registerInitCommand(program);
 
@@ -68,4 +71,5 @@ if (process.argv.length <= 2) {
     : process.argv;
 
   await program.parseAsync(argv);
+  await runRootUpdateOption(program);
 }

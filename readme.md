@@ -1,29 +1,41 @@
-# perky_CLI
+# perky — CLI Workspace Launcher & AI Assistant
 
-I am just a Workspace-launcher with  AI-Assistant for Windows-first workflows.
+perky is a Windows-first CLI that combines workspace automation and AI assistance for developers. It lets you name projects, start services, open tools, and ask or explain code using AI providers (Gemini, OpenAI, Ollama).
 
-**Status:** Work in progress. Core commands are implemented and usable.
+Status: Active development — core commands implemented and tested.
 
-## What works today
-- `perky init` interactive setup for provider, model, editor, and optional project registration
-- `perky ask` AI Q&A with optional clipboard copy
-- `perky explain` AI file explanations with detail/section controls
-- `perky summarize` log summarization with local JSON summary and optional AI insight
-- `perky time` show the current local time (use `--live` to update continuously)
-- `perky open` open project editor, browser URLs, terminal, and file explorer
-- `perky app <name>` open an installed application (shorthand: `perky <app>`), e.g. Chrome, Brave, YouTube (if installed)
-- `perky start` run configured services concurrently (attached or detached)
-- `perky go` normalize/open/copy/print URLs quickly
-- `perky config` set/get/list/add-project/remove-project/edit global config
+**Highlights (recent updates):**
+- New `perky start` orchestration improvements: better concurrent service handling and detached mode.
+- `perky summarize` now saves local JSON summaries and offers optional AI insights.
+- Improved AI provider abstraction and streaming support (see `src/ai/`).
+- Expanded project preset config and `perky config` helpers (add/list/remove projects).
 
-## Install (npm)
+## Quick list of commands
+- `perky init` — interactive setup for AI provider, model, editor, and optional project registration
+- `perky ask` — AI Q&A (supports streaming and clipboard copy)
+- `perky explain` — AI file explanations with `--detail` and `--section`
+- `perky summarize` — summarize logs; outputs JSON summary and optional AI insights
+- `perky time` — show local time (`--live` for continuous update)
+- `perky open` — open editor, browser URLs, file explorer, terminal
+- `perky app <name>` — open an installed app (alias: `perky <app>`)
+- `perky start` — start configured services (attached or detached)
+- `perky go` — normalize/open/copy/print URLs quickly
+- `perky shutdown` / `perky restart` — system power actions (`--delay` available)
+- `perky update` — update perky to latest published version
+- `perky config` — set/get/list/add-project/remove-project/edit global config
+
+## Install
+
+Using npm (published package name: `perky`):
+
 ```bash
 npm i perky
 # or
 npm i -g perky
 ```
 
-## Install (local dev)
+Local development:
+
 ```bash
 git clone https://github.com/ArushKhasru/perky.git
 cd perky
@@ -31,72 +43,55 @@ npm install
 npm link
 ```
 
-Then run:
+Run:
+
 ```bash
 perky --help
-```
-
-You can also run directly:
-```bash
+# or
 node cli.js --help
 ```
 
-## Quick start
-```bash
-perky init
-perky ask "How do I read a file async in Node.js?"
-perky explain package.json
-perky summarize app.log --tail 200
-perky time
-perky time --live
-perky open myapp
-perky chrome
-perky start myapp
-perky go github.com
-```
-
-Use `perky open <project>` to open a configured project; the shorthand `perky <app>` is reserved for installed desktop apps like Chrome/Brave/YouTube (if installed).
-
 ## Configuration
-Global config is stored at `~/.perky/config.json`. Project-local config is `.perky.json`.
 
-Environment variables:
+Global config: `~/.perky/config.json` — stores AI defaults and project presets.
+Project-local config: `.perky.json` in project root.
+
+Environment variables supported:
 - `GEMINI_API_KEY`
 - `OPENAI_API_KEY`
 
-`perky init` can also write the key into a local `.env` file.
+`perky init` can persist keys into a local `.env` file.
 
-Example config:
-```jsonc
-{
-  "ai": {
-    "provider": "gemini",
-    "model": "gemini-2.0-flash",
-    "temperature": 0.7,
-    "maxTokens": 2048
-  },
-  "projects": {
-    "myapp": {
-      "path": "D:\\projects\\myapp",
-      "browser": "http://localhost:3000",
-      "editor": "code",
-      "services": [
-        { "name": "frontend", "cmd": "npm run dev", "cwd": "./client", "port": 3000 },
-        { "name": "backend", "cmd": "npm run dev", "cwd": "./server", "port": 5000 }
-      ]
-    }
-  },
-  "defaults": {
-    "editor": "code",
-    "browser": "default",
-    "shell": "powershell"
-  }
-}
+Example global config structure is in `config/defaults.json`.
+
+## AI Providers
+
+Supported providers:
+- Gemini — uses `GEMINI_API_KEY`
+- OpenAI — uses `OPENAI_API_KEY`
+- Ollama — local server at `http://localhost:11434`
+
+AI behavior and prompt templates are in `src/ai/prompt.js` and provider adapters in `src/ai/provider.js`.
+
+## Project presets
+
+Register projects with `perky config add-project <name> --path <path>` and include optional `editor`, `browser`, and `services` entries so `perky start` and `perky open` work seamlessly.
+
+## Development & Testing
+
+Run the test suite with:
+
+```bash
+npm test
 ```
 
-`perky ask` reads `ai.context` from `.perky.json` to enrich prompts.
+Tests are under the `tests/` directory and cover `src/ai`, `src/commands`, `src/utils`, and `src/workspace`.
 
-## AI providers
-- **Gemini**: uses `GEMINI_API_KEY`
-- **OpenAI**: uses `OPENAI_API_KEY`
-- **Ollama**: uses `http://localhost:11434` with no API key
+## Contributing
+
+- Open issues or PRs at: https://github.com/ArushKhasru/perky
+- Follow repo coding conventions (ESM, minimal changes, focused PRs)
+
+## License
+
+ISC

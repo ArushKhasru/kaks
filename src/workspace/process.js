@@ -28,7 +28,7 @@ export function launchDetached(command, args = [], options = {}) {
     };
     const onSpawn = () => {
       child.unref();
-      settle(resolve);
+      settle(resolve, { pid: child.pid });
     };
     const onError = (error) => {
       settle(reject, error);

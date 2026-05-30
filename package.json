@@ -1,6 +1,6 @@
 {
   "name": "perky",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "Hello_cli_perky_here",
   "keywords": [],
   "homepage": "https://github.com/ArushKhasru/perky#readme",
@@ -29,6 +29,7 @@
     "execa": "^9.6.1",
     "inquirer": "^13.4.3",
     "nodemon": "^3.1.14",
-    "ora": "^9.4.0"
+    "ora": "^9.4.0",
+    "perky": "^0.0.5"
   }
 }

@@ -4,6 +4,7 @@ import chalk from 'chalk';
 import { execaCommand } from 'execa';
 
 import { CliError } from '../commands/shared.js';
+import { recordBackgroundApp } from './system.js';
 
 const SERVICE_COLORS = [chalk.cyan, chalk.green, chalk.magenta, chalk.yellow, chalk.blue];
 
@@ -17,6 +18,8 @@ export async function startServices(services, options = {}) {
 }
 
 export async function startDetached(services) {
+  const registrations = [];
+
   for (const service of services) {
     const child = execaCommand(service.cmd, {
       cwd: service.cwd,
@@ -26,7 +29,16 @@ export async function startDetached(services) {
       stdio: 'ignore',
     });
     child.unref?.();
+
+    registrations.push(recordBackgroundApp({
+      kind: 'service',
+      name: service.name,
+      pid: child.pid,
+      command: service.cmd,
+    }).catch(() => undefined));
   }
+
+  await Promise.all(registrations);
 }
 
 export async function startAttached(services) {
